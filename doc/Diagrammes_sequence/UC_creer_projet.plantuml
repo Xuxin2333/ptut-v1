@@ -1,6 +1,5 @@
-# diagramme de séquences systeme pour use case créer projet
-
 @startuml
+' diagramme de séquences systeme pour use case "créer projet"
 
 actor client
 

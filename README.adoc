@@ -27,11 +27,11 @@ Ce projet est cloné automatiquement au début de votre projet de PTUT S2, il co
 
 == Équipe de développement
 
--DUFRECHOU Laurian
--ONEDA Mathis
--SEBAICI Kelian
--VOVC Dan Gabriel
--ZHU Xuxin
+- `Dufrechou Laurian`
+- `ONEDA Mathis`
+- `SEBAICI Kelian`
+- `VOVC Dan Gabriel`
+- `ZHU Xuxin`
 
 :version: v0
 == Version initiale fournie : {version}

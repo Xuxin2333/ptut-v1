@@ -13,7 +13,7 @@ Chef_De_Projet -> systeme : description
 Chef_De_Projet -> systeme : date début
 Chef_De_Projet -> systeme : date fin estimée
 Chef_De_Projet -> systeme : date fin réelle
-Chef_De_Projet -> systeme : envoie de l'id
+Chef_De_Projet -> systeme : envoie de l'id du Client qui a commandé ce projet
 
 systeme -> systeme : vérification validité des champs
 

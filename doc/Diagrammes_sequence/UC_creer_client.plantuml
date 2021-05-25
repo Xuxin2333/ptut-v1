@@ -15,7 +15,7 @@ employé -> systeme : joindre client à un projet (null si aucun)
 employé -> systeme : telephone client
 employé -> systeme : date debut contrat
 employé -> systeme : date fin contrat
-employé -> systeme : envoie de l'id
+employé -> systeme : envoie de l'id du projet associé au client 
 
 systeme -> systeme : vérification validité des champs
 

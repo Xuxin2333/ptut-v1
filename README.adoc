@@ -25,11 +25,13 @@ Ce projet est cloné automatiquement au début de votre projet de PTUT S2, il co
 - `WSPCE_PTUT_S2_2020_2021_ETU.zip` : les sources de la version V0
 - `Script_SQL_V0.sql` : le script SQL   
 
-== Équipe de développement (à mettre à jour)
+== Équipe de développement
 
-- Membre 1
-- Membre 2
-- ...
+- `Dufrechou Laurian`
+- `ONEDA Mathis`
+- `SEBAICI Kelian`
+- `VOVC Dan Gabriel`
+- `ZHU Xuxin`
 
 :version: v0
 == Version initiale fournie : {version}
@@ -55,8 +57,8 @@ image::doc/media/{version}/sni.png[SNI,width=80%]
 [cols="1,2,2,5",options=header]
 |===
 | Date    | Nom         |  Lien                             | Retour
-| _24/05_ | _Exemple_   |  link:doc/media/v0/dc.png[PNG]    |
-| 25/05   | Gantt V1    |       |
+| 25/05   | Gantt V1    |  link:doc/gantt-v1/Gantt-v1.pdf[PDF Gantt]  
+                           link:doc/gantt-v1/Gantt-v1-roles.pdf[PDF Roles] | RAS. Bonne idée de séparer les 2. Cf. Merge resquest.
 | 26/05   | CdC V1      |            |          
 |         | Gantt V1-2  |                 |      
 | 27/05   | CdC V1 final |                     | 

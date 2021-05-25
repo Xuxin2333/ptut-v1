@@ -1,0 +1,28 @@
+# diagramme de séquences systeme pour use case créer projet
+
+@startuml
+
+actor client
+
+client -> systeme : créer projet
+
+activate systeme
+
+client -> systeme : envoie de l'id du projet
+client -> systeme : nom du projet
+client -> systeme : description
+client -> systeme : date début
+client -> systeme : date fin estimée
+client -> systeme : date fin réelle
+client -> systeme : envoie de l'id
+
+systeme -> systeme : vérification validité des champs
+
+alt vérifie les conditions de validité
+systeme --> client : Projet créé
+||10||
+else ne vérifie pas les condition de validité 
+systeme --> client : Champs invalide
+end
+
+@enduml

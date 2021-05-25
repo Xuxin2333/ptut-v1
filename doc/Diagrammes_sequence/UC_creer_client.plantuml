@@ -1,0 +1,29 @@
+@startuml
+' diagramme de séquences systeme pour use case "créer client"
+
+actor employé
+
+employé -> systeme : créer client
+
+activate systeme
+
+employé -> systeme : envoie de l'id du client
+employé -> systeme : nom du client
+employé -> systeme : date de naissance client
+employé -> systeme : adresse client
+employé -> systeme : joindre client à un projet (null si aucun)
+employé -> systeme : telephone client
+employé -> systeme : date debut contrat
+employé -> systeme : date fin contrat
+employé -> systeme : envoie de l'id
+
+systeme -> systeme : vérification validité des champs
+
+alt vérifie les conditions de validité
+systeme --> employé : Client créé
+||10||
+else ne vérifie pas les condition de validité 
+systeme --> employé : Champs invalide
+end
+
+@enduml

@@ -57,9 +57,8 @@ image::doc/media/{version}/sni.png[SNI,width=80%]
 [cols="1,2,2,5",options=header]
 |===
 | Date    | Nom         |  Lien                             | Retour
-| _24/05_ | _Exemple_   |  link:doc/media/v0/dc.png[PNG]    |
 | 25/05   | Gantt V1    |  link:doc/gantt-v1/Gantt-v1.pdf[PDF Gantt]  
-                           link:doc/gantt-v1/Gantt-v1-roles.pdf[PDF Roles] |
+                           link:doc/gantt-v1/Gantt-v1-roles.pdf[PDF Roles] | RAS. Bonne idée de séparer les 2. Cf. Merge resquest.
 | 26/05   | CdC V1      |            |          
 |         | Gantt V1-2  |                 |      
 | 27/05   | CdC V1 final |                     | 

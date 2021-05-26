@@ -57,7 +57,7 @@ EXCEPTION
 END;
 /
 
-
+------------------------Procedure AfficherClient-----------------------------
 
 CREATE OR REPLACE PROCEDURE AfficherClient
 (
@@ -94,7 +94,43 @@ END;
 /
 
 
-------------------------DROIT POUR LES PROCEDURE--------------------------------
+------------------------Procedure modifierProjet-----------------------------
+
+
+CREATE OR REPLACE PROCEDURE modifierClient
+(
+    vId Client.idNumCli%TYPE,
+    vNom Client.nom%TYPE,
+    vPrenom Client.prenom%TYPE,
+    vEntreprise Client.entreprise%TYPE,
+    vEmail Client.email%TYPE,
+    vTelephone Client.telephone%TYPE
+)
+as
+    
+
+BEGIN
+
+    -- modifier les champs du clients
+
+    UPDATE Client
+    SET nom = vNom,
+        prenom = vPrenom,
+        entreprise = vEntreprise,
+        email = vEmail,
+        telephone = vTelephone 
+    where idNumCli = vId;
+
+	DBMS_OUTPUT.PUT_LINE('Client '||vNom || ' + ' ||vPrenom|| ' modifié.');
+    
+	-- Valider (fin de transaction)
+
+	COMMIT;
+
+END;
+/
+
+------------------------droit pour les procedures(NE MARCHE PAS)--------------------------------
 grant execute on CreerClient TO (select idEmploye from Employe where idRole = 1);
 
 grant execute on AfficherClient TO (select idEmploye from Employe where idRole = 1);

@@ -150,10 +150,10 @@ BEGIN
 		RAISE erreur_ID;
 	END IF;
 
-	UPDATE Employe
+	UPDATE Client
 	SET estActif=0 
 	WHERE idNumCli=vID
-	DBMS_OUTPUT.PUT_LINE('Employé '  || vID || 'est désormais inactif');
+	DBMS_OUTPUT.PUT_LINE('Client '  || vID || 'est désormais inactif');
 	COMMIT;
 	
 EXCEPTION

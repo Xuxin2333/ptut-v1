@@ -1,0 +1,59 @@
+@startuml
+' diagramme de classes pour l'application
+
+class Employé {
+  -idEmploye
+  -nom
+  -prenom
+  -login
+  -nomDePasse
+  -estActif
+}
+
+class Role {
+  -idRole
+  -nom
+}
+
+class NiveauCompetence {
+  -tauxHoraire
+}
+
+class Niveau {
+  -idNiveau
+  -intitule
+}
+
+class Competence {
+  -idCompetence
+  -nom
+} 
+
+class Projet {
+  -idProjet
+  -nom
+  -description
+  -dateDebut
+  -dateFinEstimee
+  -dateFinReelle
+  -dateFacturation
+  -montantFacture
+  -estActif
+}
+
+class Client {
+  -idNumCli
+  -nom
+  -prenom
+  -entreprise
+  -email
+  -telephone
+  -estActif
+}
+
+Role "1" -down- "0..*" Employé : Avoir
+(Niveau, Competence)..NiveauCompetence
+NiveauCompetence "1" - "0..*" Employé : Detenir
+Employé "0..1" - "1" Projet : Travailler
+Projet "0..*" - "1" Client : Rattacher
+@enduml

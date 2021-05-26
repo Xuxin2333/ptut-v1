@@ -2,14 +2,17 @@
 
 create table Client(
 
-    idClient number(5),
+    idNumCli number(5),
     nom varchar(30),
     prenom varchar(30),
-    idProjetCommandé number(3),
+    entreprise varchar(30);
+    email varchar(50);
+    telephone number(10);
+    estActif number(1); -- 1 est actif, 0 ne l'est pas 
 
-    CONSTRAINT PK_idClient PRIMARY KEY (idClient),
-    CONSTRAINT FK_idProjet_Projet FOREIGN KEY (idProjetCommandé) REFERENCES Projet(idProjet),
-    CONSTRAINT UC_idClient UNIQUE (idClient)
+    CONSTRAINT PK_idNumCli PRIMARY KEY (idNumCli),
+    CONSTRAINT UC_idNumCli UNIQUE (idNumCli)
+    CONSTRAINT CHK_estActif CHECK (estActif IN (0,1)),
 );
 
 -----------------séquence pour id client----------------
@@ -27,27 +30,23 @@ CREATE OR REPLACE PROCEDURE CreerClient
 (
     vNom Client.Nom%TYPE,
     vPrenom Client.prenom%TYPE,
-    vIdProjetCommandé Client.idProjetCommandé%TYPE
+    vEntreprise Client.entreprise%TYPE,
+    vEmail Client.email%TYPE,
+    vTelephone Client.telephone%TYPE
 )
 IS 
 
-    erreur_idProjetAssocie exception
-    ----------traiter erreur idClient--------------
-    PRAGMA EXCEPTION_INIT()
 
 BEGIN
 
-    INSERT INTO Client (idClient, nom, prenom, idProjetCommandé) 
-	VALUES (sequence_Client.NEXTVAL, vNom, vPrenom, vIdProjetCommandé);
+    INSERT INTO Client (idNumCli, nom, prenom, entreprise, email, telephone, estActif) 
+	VALUES (sequence_Client.NEXTVAL, vNom, vPrenom, vEntreprise, vEmail, vTelephone, 1);
 	DBMS_OUTPUT.PUT_LINE('Client '||vNom || ||vPrenom|| ' ajouté.');
 	-- Valider (fin de transaction)
 	COMMIT;
 
 EXCEPTION
 
-    WHEN erreur_idProjetAssocie THEN
-		ROLLBACK;
-		RAISE_APPLICATION_ERROR (-20010,'ID projet introuvable');
 	WHEN OTHERS THEN
 		ROLLBACK;
 		DBMS_OUTPUT.PUT_LINE (SQLERRM);

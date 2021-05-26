@@ -131,6 +131,45 @@ BEGIN
 END;
 /
 
+------------------------Procédure desactiverProjet--------------------------------
+
+CREATE OR REPLACE PROCEDURE desactiverProjet( vID Projet.idProjet%TYPE)
+AS
+
+	erreur_ID EXCEPTION;
+	n NUMBER;
+
+BEGIN
+
+	SELECT count(*) INTO n
+	FROM Projet
+	WHERE idProjet=vID
+	
+	IF (n=0) THEN
+		RAISE erreur_ID;
+	END IF;
+
+	UPDATE Projet
+	SET estActif=0 
+	WHERE idProjet=vID
+	DBMS_OUTPUT.PUT_LINE('Projet '  || vID || 'est désormais inactif');
+	COMMIT;
+	
+EXCEPTION
+	
+	WHEN erreur_ID THEN
+		ROLLBACK;
+		DBMS_OUTPUT.PUT_LINE('ID inconnu !');
+	WHEN OTHERS THEN
+		ROLLBACK;
+		DBMS_OUTPUT.PUT_LINE (SQLERRM);
+		RAISE_APPLICATION_ERROR (-20000, 'ERREUR IMPREVUE !');
+		
+END;
+/
+
+
+
 ------------------------droit pour les procedures(NE MARCHE PAS)--------------------------------
 grant execute on CreerProjet TO (select login from Employe where idRole = 1);
 

@@ -3,16 +3,17 @@
 create table Projet(
 
     idProjet number(3),
-    intitule varchar(100),
+    nom varchar(100),
+    description varchar(1000);
     dateDebut date, 
-    dateFinEstimee date, 
+    dateFinEstimee date,
+    dateFinReelle date,  
     estActif number(1) DEFAULT 1; --par défaut actif
-    idClientCommande number (5); 
 
     CONSTRAINT PK_idClient PRIMARY KEY (idClient),
-    CONSTRAINT FK_idClientCommande_idClient FOREIGN KEY (idClientCommande) REFERENCES Client(idClient),
     CONSTRAINT CHK_estActif CHECK (estActif IN (0,1)),
-    CONSTRAINT UC_idClient UNIQUE (idProjet)
+    CONSTRAINT UC_idClient UNIQUE (idProjet),
+    CONSTRAINT CHK_dateDebut_fin CHECK (dateDebut < dateFinEstimee and dateDebut < dateFinReelle)
 );
 
 -----------------séquence pour id Projet----------------
@@ -30,29 +31,25 @@ create SEQUENCE sequence_Projet
 
 CREATE OR REPLACE PROCEDURE CreerProjet
 (
-    vIntitule Projet.intitule%TYPE,
+    vNom Projet.nom%TYPE,
     vDateDebut Projet.dateDebut%TYPE,
     vDateFinEstimee Projet.dateFinEstimee%TYPE,
     vIdClientCommande Projet.idClientCommande%TYPE
 )
 IS
-    erreur_idClient exception
-    ----------traiter erreur idClient--------------
-    PRAGMA EXCEPTION_INIT()
+
+
 
 BEGIN
     -- Insertion nouveau projet 
-    INSERT INTO Projet (idProjet, intitule, dateDebut, dateFinEstimee, estActif, idClientCommande) 
+    INSERT INTO Projet (idProjet, nom, dateDebut, dateFinEstimee, estActif, idClientCommande) 
 	VALUES (sequence_Projet.NEXTVAL, vNom, vDateDebut, vDateFinEstimee, 1 , vIdClientCommande);
-	DBMS_OUTPUT.PUT_LINE('Client '||vNom || ||vPrenom|| ' ajouté.');
+	DBMS_OUTPUT.PUT_LINE('Projet '||vNom || ' ajouté.');
 	-- Valider (fin de transaction)
 	COMMIT;
 
 EXCEPTION
 
-     WHEN erreur_idClient THEN
-		ROLLBACK;
-		RAISE_APPLICATION_ERROR (-20010,'ID Client introuvable');
 	WHEN OTHERS THEN
 		ROLLBACK;
 		DBMS_OUTPUT.PUT_LINE (SQLERRM);

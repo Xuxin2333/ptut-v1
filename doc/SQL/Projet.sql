@@ -1,4 +1,6 @@
 --------------------création table Projet-------------
+
+
 drop TABLE Projet;
 
 create table Projet(
@@ -12,7 +14,7 @@ create table Projet(
     estActif number(1) DEFAULT 1, --par défaut actif
 
     CONSTRAINT PK_idClient PRIMARY KEY (idProjet),
-    CONSTRAINT CHK_estActif_projet CHECK (estActif IN (0,1)),
+    CONSTRAINT CHK_estActif_projet CHECK (estActif IN (1,2)),
     CONSTRAINT CHK_dateDebut_fin CHECK (dateDebut < dateFinEstimee and dateDebut < dateFinReelle)
 );
 
@@ -93,7 +95,43 @@ BEGIN
 END;
 /
 
-------------------------DROIT POUR LA PROCEDURE--------------------------------
-grant execute on CreerProjet TO (select idEmploye from Employe where idRole = 1);
 
-grant execute on AfficherProjet TO (select idEmploye from Employe where idRole = 1);
+
+
+--------------------------Procedure modifier champs projet----------------------
+
+CREATE OR REPLACE PROCEDURE modifierProjet
+(
+    vId Projet.idProjet%TYPE,
+    vNom Projet.nom%TYPE,
+    vDescription Projet.descriptionP%TYPE,
+    vDateDebut Projet.dateDebut%TYPE,
+    vDateFinEstimee Projet.dateFinEstimee%TYPE,
+    vDateFinReelle Projet.dateFinReelle%TYPE
+)
+IS
+
+BEGIN
+
+    -- modification du projet 
+
+    UPDATE Projet 
+    SET nom = vNom,
+     descriptionP = vDescription, 
+     dateDebut = vDateDebut, 
+     dateFinEstimee = vDateFinEstimee,
+     dateFinReelle = vDateFinReelle
+	where idProjet = vId;
+
+	DBMS_OUTPUT.PUT_LINE('Projet '||vNom || ' modifié.');
+
+	-- Valider (fin de transaction)
+
+	COMMIT;
+END;
+/
+
+------------------------droit pour les procedures(NE MARCHE PAS)--------------------------------
+grant execute on CreerProjet TO (select login from Employe where idRole = 1);
+
+grant execute on AfficherProjet TO (select login from Employe where idRole = 1);

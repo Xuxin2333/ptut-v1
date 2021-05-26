@@ -11,7 +11,6 @@ Chef_De_Projet -> systeme : envoie de l'id du client
 Chef_De_Projet -> systeme : nom du client
 Chef_De_Projet -> systeme : date de naissance client
 Chef_De_Projet -> systeme : adresse client
-Chef_De_Projet -> systeme : joindre client à un projet (null si aucun)
 Chef_De_Projet -> systeme : telephone client
 Chef_De_Projet -> systeme : date debut contrat
 Chef_De_Projet -> systeme : date fin contrat

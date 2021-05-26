@@ -130,6 +130,48 @@ BEGIN
 END;
 /
 
+
+
+------------------------Procédure desactiverClient--------------------------------
+
+CREATE OR REPLACE PROCEDURE desactiverClient( vID Client.idNumCli%TYPE)
+AS
+
+erreur_ID EXCEPTION;
+n NUMBER;
+
+BEGIN
+
+	SELECT count(*) INTO n
+	FROM Client
+	WHERE idNumCli=vID
+	
+	IF (n=0) THEN
+		RAISE erreur_ID;
+	END IF;
+
+	UPDATE Employe
+	SET estActif=0 
+	WHERE idNumCli=vID
+	DBMS_OUTPUT.PUT_LINE('Employé '  || vID || 'est désormais inactif');
+	COMMIT;
+	
+EXCEPTION
+	
+	WHEN erreur_ID THEN
+		ROLLBACK;
+		DBMS_OUTPUT.PUT_LINE('ID inconnu !');
+	WHEN OTHERS THEN
+		ROLLBACK;
+		DBMS_OUTPUT.PUT_LINE (SQLERRM);
+		RAISE_APPLICATION_ERROR (-20000, 'ERREUR IMPREVUE !');
+		
+END;
+/
+
+
+
+
 ------------------------droit pour les procedures(NE MARCHE PAS)--------------------------------
 grant execute on CreerClient TO (select idEmploye from Employe where idRole = 1);
 

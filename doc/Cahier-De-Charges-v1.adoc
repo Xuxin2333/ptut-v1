@@ -4,12 +4,12 @@
 :numbered:
 :icons: font
 
-image:https://github.com/vovcdan/test-PTUT/blob/master/doc/logoIUT.png[IUT]
+image:media/logoIUT.png[IUT]
 
 
 :company: RHESN
 
-Membres : _DUFRECHOU Florian, ONEDA Mathis, SEBAICI Kelian, VOVC Dan-Gabriel, ZHU Xuxin_
+Membres : _DUFRECHOU Laurian, ONEDA Mathis, SEBAICI Kelian, VOVC Dan-Gabriel, ZHU Xuxin_
 
 
 toc::[]

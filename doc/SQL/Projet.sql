@@ -1,4 +1,4 @@
---------------------création table Projet-------------
+------------------création table Projet-------------
 
 
 drop TABLE Projet;
@@ -13,7 +13,10 @@ create table Projet(
     dateFinReelle date,  
     estActif number(1) DEFAULT 1, --par défaut actif
 
+    idNumCli number (5),
+
     CONSTRAINT PK_idClient PRIMARY KEY (idProjet),
+    CONSTRAINT FK_idNumCLi FOREIGN KEY (idNumCli) references Client(idNumCli),
     CONSTRAINT CHK_estActif_projet CHECK (estActif IN (1,2)),
     CONSTRAINT CHK_dateDebut_fin CHECK (dateDebut < dateFinEstimee and dateDebut < dateFinReelle)
 );
@@ -36,22 +39,37 @@ CREATE OR REPLACE PROCEDURE CreerProjet
     vNom Projet.nom%TYPE,
     vDescription Projet.descriptionP%TYPE,
     vDateDebut Projet.dateDebut%TYPE,
-    vDateFinEstimee Projet.dateFinEstimee%TYPE
+    vDateFinEstimee Projet.dateFinEstimee%TYPE,
+    vIdNumClient Projet.idNumCli%TYPE
 )
 IS
 
-
+	erreur_IdNumClient EXCEPTION;
+    PRAGMA EXCEPTION_INIT (erreur_IdNumClient, -2291);
+	n NUMBER;
+    
 
 BEGIN
+
+	SELECT count(*) INTO n
+	FROM Client
+	WHERE idNumCli=vIdNumClient;
+	
+	IF (n=0) THEN
+		RAISE erreur_IdNumClient;
+	END IF;
     -- Insertion nouveau projet 
-    INSERT INTO Projet (idProjet, nom, descriptionP, dateDebut, dateFinEstimee, estActif) 
-	VALUES (sequence_Projet.NEXTVAL, vNom,vDescription, vDateDebut, vDateFinEstimee,  1 );
+    INSERT INTO Projet (idProjet, nom, descriptionP, dateDebut, dateFinEstimee, estActif, idNumCli) 
+	VALUES (sequence_Projet.NEXTVAL, vNom,vDescription, vDateDebut, vDateFinEstimee,  1 , vIdNumClient);
 	DBMS_OUTPUT.PUT_LINE('Projet '||vNom || ' ajouté.');
 	-- Valider (fin de transaction)
 	COMMIT;
 
 EXCEPTION
 
+	WHEN erreur_IdNumClient THEN
+		ROLLBACK;
+        RAISE_APPLICATION_ERROR (-2292, 'ID Client introuvable');
 	WHEN OTHERS THEN
 		ROLLBACK;
 		DBMS_OUTPUT.PUT_LINE (SQLERRM);
@@ -73,25 +91,29 @@ IS
     vDateFinEstimee Projet.dateFinEstimee%TYPE;
     vDateFinReelle Projet.dateFinReelle%TYPE;
     vActif Projet.estActif%TYPE;
+    vIdNumClient Projet.idNumCli%TYPE;
 
 	erreur_ID EXCEPTION;
+    PRAGMA EXCEPTION_INIT (erreur_ID, -2292);
 	n NUMBER;
+    
 
 BEGIN
 
 	SELECT count(*) INTO n
 	FROM Projet
-	WHERE idProjet=vID;
+	WHERE idProjet=vId;
 	
 	IF (n=0) THEN
 		RAISE erreur_ID;
 	END IF;
 
-    select nom, descriptionP, dateDebut, dateFinEstimee, dateFinReelle, estActif  into vNom,vDescription ,vDateDebut ,vDateFinEstimee ,vDateFinReelle ,vActif
+    select nom, descriptionP, dateDebut, dateFinEstimee, dateFinReelle, estActif, idNumCli  into vNom,vDescription ,vDateDebut ,vDateFinEstimee ,vDateFinReelle ,vActif, vIdNumClient
     from Projet
     where Projet.idProjet = vId;
 
 	DBMS_OUTPUT.PUT_LINE('nom :'||vNom);
+    DBMS_OUTPUT.PUT_LINE('Projet commandé par le client ID :'||vIdNumClient);
     DBMS_OUTPUT.PUT_LINE('Date de début de projet :'||vDateDebut);
     DBMS_OUTPUT.PUT_LINE(vDescription);
     IF vActif = 1 THEN
@@ -108,7 +130,7 @@ EXCEPTION
 	
 	WHEN erreur_ID THEN
 		ROLLBACK;
-		DBMS_OUTPUT.PUT_LINE('ID inconnu !');
+        RAISE_APPLICATION_ERROR (-2292, 'ID inconnu');
 	WHEN OTHERS THEN
 		ROLLBACK;
 		DBMS_OUTPUT.PUT_LINE (SQLERRM);
@@ -129,17 +151,30 @@ CREATE OR REPLACE PROCEDURE modifierProjet
     vDescription Projet.descriptionP%TYPE,
     vDateDebut Projet.dateDebut%TYPE,
     vDateFinEstimee Projet.dateFinEstimee%TYPE,
-    vDateFinReelle Projet.dateFinReelle%TYPE
+    vDateFinReelle Projet.dateFinReelle%TYPE,
+    vIdNumClient Projet.idNumCli%TYPE
 )
 IS
 	erreur_ID EXCEPTION;
+    PRAGMA EXCEPTION_INIT (erreur_ID, -2292);
 	n NUMBER;
+    erreur_IdNumClient EXCEPTION;
+    PRAGMA EXCEPTION_INIT (erreur_IdNumClient, -2291);
+    m number;
 
 BEGIN
 
+    SELECT count(*) INTO m
+	FROM Client
+	WHERE idNumCli=vId;
+	
+	IF (n=0) THEN
+		RAISE erreur_IdNumClient;
+	END IF;
+
 	SELECT count(*) INTO n
 	FROM Projet
-	WHERE idProjet=vID;
+	WHERE idProjet=vId;
 	
 	IF (n=0) THEN
 		RAISE erreur_ID;
@@ -151,7 +186,8 @@ BEGIN
      descriptionP = vDescription, 
      dateDebut = vDateDebut, 
      dateFinEstimee = vDateFinEstimee,
-     dateFinReelle = vDateFinReelle
+     dateFinReelle = vDateFinReelle,
+     idNumCli = vIdNumClient
 	where idProjet = vId;
 
 	DBMS_OUTPUT.PUT_LINE('Projet '||vNom || ' modifié.');
@@ -162,9 +198,12 @@ BEGIN
 
 EXCEPTION
 	
+    WHEN erreur_IdNumClient THEN
+		ROLLBACK;
+        RAISE_APPLICATION_ERROR (-2292, 'ID Client introuvable');
 	WHEN erreur_ID THEN
 		ROLLBACK;
-		DBMS_OUTPUT.PUT_LINE('ID inconnu !');
+        RAISE_APPLICATION_ERROR (-2292, 'ID inconnu');
 	WHEN OTHERS THEN
 		ROLLBACK;
 		DBMS_OUTPUT.PUT_LINE (SQLERRM);
@@ -179,6 +218,7 @@ CREATE OR REPLACE PROCEDURE desactiverProjet( vID Projet.idProjet%TYPE)
 AS
 
 	erreur_ID EXCEPTION;
+    PRAGMA EXCEPTION_INIT (erreur_ID, -2292);
 	n NUMBER;
 
 BEGIN
@@ -201,7 +241,7 @@ EXCEPTION
 	
 	WHEN erreur_ID THEN
 		ROLLBACK;
-		DBMS_OUTPUT.PUT_LINE('ID inconnu !');
+        RAISE_APPLICATION_ERROR (-2292, 'ID inconnu');
 	WHEN OTHERS THEN
 		ROLLBACK;
 		DBMS_OUTPUT.PUT_LINE (SQLERRM);
@@ -212,3 +252,8 @@ END;
 
 
 
+
+------------------------droit pour les procedures(NE MARCHE PAS)--------------------------------
+grant execute on CreerProjet TO (select login from Employe where idRole = 1);
+
+grant execute on AfficherProjet TO (select login from Employe where idRole = 1);

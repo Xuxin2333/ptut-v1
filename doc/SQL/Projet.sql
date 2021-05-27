@@ -74,7 +74,18 @@ IS
     vDateFinReelle Projet.dateFinReelle%TYPE;
     vActif Projet.estActif%TYPE;
 
+	erreur_ID EXCEPTION;
+	n NUMBER;
+
 BEGIN
+
+	SELECT count(*) INTO n
+	FROM Projet
+	WHERE idProjet=vID;
+	
+	IF (n=0) THEN
+		RAISE erreur_ID;
+	END IF;
 
     select nom, descriptionP, dateDebut, dateFinEstimee, dateFinReelle, estActif  into vNom,vDescription ,vDateDebut ,vDateFinEstimee ,vDateFinReelle ,vActif
     from Projet
@@ -92,6 +103,17 @@ BEGIN
     END IF;
 	-- Valider (fin de transaction)
 	COMMIT;
+
+EXCEPTION
+	
+	WHEN erreur_ID THEN
+		ROLLBACK;
+		DBMS_OUTPUT.PUT_LINE('ID inconnu !');
+	WHEN OTHERS THEN
+		ROLLBACK;
+		DBMS_OUTPUT.PUT_LINE (SQLERRM);
+		RAISE_APPLICATION_ERROR (-20000, 'ERREUR IMPREVUE !');
+
 END;
 /
 
@@ -110,9 +132,18 @@ CREATE OR REPLACE PROCEDURE modifierProjet
     vDateFinReelle Projet.dateFinReelle%TYPE
 )
 IS
+	erreur_ID EXCEPTION;
+	n NUMBER;
 
 BEGIN
 
+	SELECT count(*) INTO n
+	FROM Projet
+	WHERE idProjet=vID;
+	
+	IF (n=0) THEN
+		RAISE erreur_ID;
+	END IF;
     -- modification du projet 
 
     UPDATE Projet 
@@ -128,6 +159,17 @@ BEGIN
 	-- Valider (fin de transaction)
 
 	COMMIT;
+
+EXCEPTION
+	
+	WHEN erreur_ID THEN
+		ROLLBACK;
+		DBMS_OUTPUT.PUT_LINE('ID inconnu !');
+	WHEN OTHERS THEN
+		ROLLBACK;
+		DBMS_OUTPUT.PUT_LINE (SQLERRM);
+		RAISE_APPLICATION_ERROR (-20000, 'ERREUR IMPREVUE !');
+
 END;
 /
 
@@ -143,7 +185,7 @@ BEGIN
 
 	SELECT count(*) INTO n
 	FROM Projet
-	WHERE idProjet=vID
+	WHERE idProjet=vID;
 	
 	IF (n=0) THEN
 		RAISE erreur_ID;
@@ -151,7 +193,7 @@ BEGIN
 
 	UPDATE Projet
 	SET estActif=0 
-	WHERE idProjet=vID
+	WHERE idProjet=vID;
 	DBMS_OUTPUT.PUT_LINE('Projet '  || vID || 'est désormais inactif');
 	COMMIT;
 	
@@ -170,7 +212,3 @@ END;
 
 
 
-------------------------droit pour les procedures(NE MARCHE PAS)--------------------------------
-grant execute on CreerProjet TO (select login from Employe where idRole = 1);
-
-grant execute on AfficherProjet TO (select login from Employe where idRole = 1);

@@ -1,4 +1,8 @@
 --------------------création table client-------------
+
+
+drop TABLE Projet;
+
 drop TABLE Client;
 
 create table Client(
@@ -8,12 +12,33 @@ create table Client(
     prenom varchar(30),
     entreprise varchar(30),
     email varchar(50),
-    telephone number(10),
+    telephone varchar(14),
     estActif number(1), -- 1 est actif, 0 ne l'est pas 
 
     CONSTRAINT PK_idNumCli PRIMARY KEY (idNumCli),
     CONSTRAINT CHK_estActif CHECK (estActif IN (0,1))
 );
+
+
+create table Projet(
+
+    idProjet number(3),
+    nom varchar(100),
+    descriptionP varchar(1000),
+    dateDebut date, 
+    dateFinEstimee date,
+    dateFinReelle date,  
+    estActif number(1) DEFAULT 1, --par défaut actif
+
+    idNumCli number (5),
+
+    CONSTRAINT PK_idClient PRIMARY KEY (idProjet),
+    CONSTRAINT FK_idNumCLi FOREIGN KEY (idNumCli) references Client(idNumCli),
+    CONSTRAINT CHK_estActif_projet CHECK (estActif IN (1,2)),
+    CONSTRAINT CHK_dateDebut_fin CHECK (dateDebut < dateFinEstimee and dateDebut < dateFinReelle)
+);
+
+
 
 -----------------séquence pour id client----------------
 
@@ -42,7 +67,7 @@ IS
 BEGIN
 
     INSERT INTO Client (idNumCli, nom, prenom, entreprise, email, telephone, estActif) 
-	VALUES (sequence_Client.CURRVAL, vNom, vPrenom, vEntreprise, vEmail, vTelephone, 1);
+	VALUES (sequence_Client.NEXTVAL, vNom, vPrenom, vEntreprise, vEmail, vTelephone, 1);
 	DBMS_OUTPUT.PUT_LINE('Client '||vNom || ' + ' ||vPrenom|| ' ajouté.');
 	-- Valider (fin de transaction)
 	COMMIT;
@@ -72,6 +97,7 @@ as
     vActif Client.estActif%TYPE;
 
     erreur_ID EXCEPTION;
+    PRAGMA EXCEPTION_INIT (erreur_ID, -2292);
     n NUMBER;
 
 BEGIN
@@ -105,7 +131,7 @@ EXCEPTION
 	
 	WHEN erreur_ID THEN
 		ROLLBACK;
-		DBMS_OUTPUT.PUT_LINE('ID inconnu !');
+		RAISE_APPLICATION_ERROR (-2292, 'ID inconnu');
 	WHEN OTHERS THEN
 		ROLLBACK;
 		DBMS_OUTPUT.PUT_LINE (SQLERRM);
@@ -130,6 +156,7 @@ CREATE OR REPLACE PROCEDURE modifierClient
 as
     
     erreur_ID EXCEPTION;
+    PRAGMA EXCEPTION_INIT (erreur_ID, -2292);
     n NUMBER;
 
 BEGIN
@@ -161,7 +188,7 @@ EXCEPTION
 	
 	WHEN erreur_ID THEN
 		ROLLBACK;
-		DBMS_OUTPUT.PUT_LINE('ID inconnu !');
+		RAISE_APPLICATION_ERROR (-2292, 'ID inconnu');
 	WHEN OTHERS THEN
 		ROLLBACK;
 		DBMS_OUTPUT.PUT_LINE (SQLERRM);
@@ -174,17 +201,18 @@ END;
 
 ------------------------Procédure desactiverClient--------------------------------
 
-CREATE OR REPLACE PROCEDURE desactiverClient( vID Client.idNumCli%TYPE)
+CREATE OR REPLACE PROCEDURE desactiverClient( vId Client.idNumCli%TYPE)
 AS
 
 erreur_ID EXCEPTION;
+PRAGMA EXCEPTION_INIT (erreur_ID, -2292);
 n NUMBER;
 
 BEGIN
 
 	SELECT count(*) INTO n
 	FROM Client
-	WHERE idNumCli=vID;
+	WHERE idNumCli=vId;
 	
 	IF (n=0) THEN
 		RAISE erreur_ID;
@@ -192,15 +220,15 @@ BEGIN
 
 	UPDATE Client
 	SET estActif=0 
-	WHERE idNumCli=vID;
-	DBMS_OUTPUT.PUT_LINE('Client '  || vID || 'est désormais inactif');
+	WHERE idNumCli=vId;
+	DBMS_OUTPUT.PUT_LINE('Client '  || vId || 'est désormais inactif');
 	COMMIT;
 	
 EXCEPTION
 	
 	WHEN erreur_ID THEN
 		ROLLBACK;
-		DBMS_OUTPUT.PUT_LINE('ID inconnu !');
+        RAISE_APPLICATION_ERROR (-2292, 'ID inconnu');
 	WHEN OTHERS THEN
 		ROLLBACK;
 		DBMS_OUTPUT.PUT_LINE (SQLERRM);
@@ -213,6 +241,7 @@ END;
 
 
 ------------------------droit pour les procedures(NE MARCHE PAS)--------------------------------
-grant execute on CreerClient TO (select idEmploye from Employe where idRole = 1);
 
-grant execute on AfficherClient TO (select idEmploye from Employe where idRole = 1);
+--grant execute on CreerClient TO (select idEmploye from Employe where idRole = 1);
+
+--grant execute on AfficherClient TO (select idEmploye from Employe where idRole = 1);

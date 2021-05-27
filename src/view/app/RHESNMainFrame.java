@@ -63,7 +63,7 @@ public class RHESNMainFrame extends JFrame {
         projectButton = new JButton("Projet");
         projectButton.setPreferredSize(new Dimension(200,50));
         projectButton.setBackground(new Color(104, 177, 255)) ;
-        projectButton.setEnabled(false);
+        projectButton.addActionListener(e -> actionProjet());
 
         employeButton = new JButton("Employé");
         employeButton.setPreferredSize(new Dimension(200,50));
@@ -112,6 +112,12 @@ public class RHESNMainFrame extends JFrame {
             contentButton.add(projectButton);
             contentButton.add(clientButton);
         }
+	}
+	
+	private void actionProjet() {
+		GestionProjet gestionProjet = new GestionProjet(this, employeUtilisateur);
+		gestionProjet.setVisible(true);
+		gestionProjet.dispose();
 	}
 
     private void actionEmploye() {

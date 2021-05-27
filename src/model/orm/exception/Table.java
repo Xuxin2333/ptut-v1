@@ -10,5 +10,6 @@ public enum Table {
 	Competence,
 	NiveauCompetence,
 	Niveau,
+	Projet,
 	NONE
 }

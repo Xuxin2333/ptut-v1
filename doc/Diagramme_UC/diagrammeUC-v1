@@ -1,0 +1,19 @@
+@startuml
+' diagramme des cas d'utilisation v1
+
+:Chef_De_Projet:
+
+Chef_De_Projet-up- (Gérer les employés)
+
+note "Créer, Lire, Modifier, Inactiver les employés" AS NE
+NE-->(Gérer les employés)
+
+Chef_De_Projet-right- (Gérer les clients)
+note "Créer, Lire, Modifier les clients" AS NC
+NC-->(Gérer les clients)
+
+
+Chef_De_Projet-- (Gérer les projets)
+note "Créer, Lire, Modifier les projets" AS NP
+NP-->(Gérer les projets)
+@enduml

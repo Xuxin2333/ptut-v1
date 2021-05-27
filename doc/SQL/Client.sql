@@ -71,7 +71,18 @@ as
     vTelephone Client.telephone%TYPE;
     vActif Client.estActif%TYPE;
 
+    erreur_ID EXCEPTION;
+    n NUMBER;
+
 BEGIN
+
+    SELECT count(*) INTO n
+	FROM Client
+	WHERE idNumCli=vID;
+	
+	IF (n=0) THEN
+		RAISE erreur_ID;
+	END IF;
 
     select nom, prenom, entreprise, email, telephone, estActif  into vNom,vPrenom ,vEntreprise ,vEmail ,vTelephone ,vActif
     from Client
@@ -89,6 +100,16 @@ BEGIN
     END IF;
 	-- Valider (fin de transaction)
 	COMMIT;
+
+EXCEPTION
+	
+	WHEN erreur_ID THEN
+		ROLLBACK;
+		DBMS_OUTPUT.PUT_LINE('ID inconnu !');
+	WHEN OTHERS THEN
+		ROLLBACK;
+		DBMS_OUTPUT.PUT_LINE (SQLERRM);
+		RAISE_APPLICATION_ERROR (-20000, 'ERREUR IMPREVUE !');
 
 END;
 /
@@ -108,10 +129,19 @@ CREATE OR REPLACE PROCEDURE modifierClient
 )
 as
     
+    erreur_ID EXCEPTION;
+    n NUMBER;
 
 BEGIN
 
     -- modifier les champs du clients
+    SELECT count(*) INTO n
+	FROM Client
+	WHERE idNumCli=vID;
+	
+	IF (n=0) THEN
+		RAISE erreur_ID;
+	END IF;
 
     UPDATE Client
     SET nom = vNom,
@@ -126,6 +156,16 @@ BEGIN
 	-- Valider (fin de transaction)
 
 	COMMIT;
+
+EXCEPTION
+	
+	WHEN erreur_ID THEN
+		ROLLBACK;
+		DBMS_OUTPUT.PUT_LINE('ID inconnu !');
+	WHEN OTHERS THEN
+		ROLLBACK;
+		DBMS_OUTPUT.PUT_LINE (SQLERRM);
+		RAISE_APPLICATION_ERROR (-20000, 'ERREUR IMPREVUE !');
 
 END;
 /
@@ -144,7 +184,7 @@ BEGIN
 
 	SELECT count(*) INTO n
 	FROM Client
-	WHERE idNumCli=vID
+	WHERE idNumCli=vID;
 	
 	IF (n=0) THEN
 		RAISE erreur_ID;
@@ -152,7 +192,7 @@ BEGIN
 
 	UPDATE Client
 	SET estActif=0 
-	WHERE idNumCli=vID
+	WHERE idNumCli=vID;
 	DBMS_OUTPUT.PUT_LINE('Client '  || vID || 'est désormais inactif');
 	COMMIT;
 	

@@ -162,3 +162,6 @@ L’application doit entièrement fonctionner à partir d’un .jar exécutable 
 
 Grâce à cet outil, la société “DevExpert” pourra garantir un suivi fiable de la globalité des projets au sein de ses employeurs en sachant aussi les détailles de leur clients et leur employés. Les chefs de projets auront ces tâches facilités grâce à ce dispositif simple d’utilisation. Par la suite, il sera possible d'implémenter plusieurs fonctionnalités afin de mieux personnaliser le logiciel.
 
+= Fichiers complementaires
+
+link:Cahier-de-Charges-v1/Cahier_de_Charges_v1.pdf[Cahier de Charges VERSION PDF]

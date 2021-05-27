@@ -7,12 +7,11 @@ package model.data;
 
 public class Client {
 	
-    public static final int ID_CLIENT_INEXISTANT = -1000;
+   public static final int ID_CLIENT_INEXISTANT = -1000;
+   public static final int EST_ACTIF = 1;
+   public static final int EST_INACTIF = 0;
 	
-	public static final int EST_ACTIF = 1;
-	public static final int EST_INACTIF = 0;
-	
-	private int idClient;
+    private int idClient;
     private String nom;
     private String prenom;
     private String entreprise;
@@ -77,8 +76,8 @@ public class Client {
     
     
     public int getEstActif() {
-		return this.estActif;
-	}
+	return this.estActif;
+    }
     
     
     
